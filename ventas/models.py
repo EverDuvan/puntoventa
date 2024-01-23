@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 
 class Clientes(models.Model):
-    codigo = models.CharField(max_length=10, null = True, blank = True)
-    nombre = models.CharField(max_length=50, null = True, blank = True)
-    telefono = models.CharField(max_length=20, null = True, blank = True)
+    codigo = models.CharField(max_length=10, null = True, blank = False)
+    nombre = models.CharField(max_length=50, null = True, blank = False)
+    telefono = models.CharField(max_length=20, null = True, blank = False)
     direccion = models.CharField(max_length=70)
     email = models.EmailField()
     Created = models.DateTimeField(auto_now_add=True)
