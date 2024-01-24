@@ -145,14 +145,18 @@
     </div>
 </div>
 {% if messages %}
-{% for message in messages %}
 <script>
+    var messagesHtml = '';
+    {% for message in messages %}
+        messagesHtml += '{{message}}<br>';
+    {% endfor %}
+
     Swal.fire({
-        icon: 'error',
-        title: 'Error...',
-        text: "{{message}}",
-    })
+        icon: 'success',
+        title: 'Success',
+        html: messagesHtml,
+    });
 </script>
-{% endfor %}
 {% endif %}
+
 {% endblock %}
