@@ -54,13 +54,16 @@ def productos_view(request):
     return render(request, 'productos.html', context)
 
 def add_producto_view(request):
-    form = AddProductoForm(request.POST)
-    if form.is_valid():
-        form.save()
-        messages.success (request, 'Producto agregado correctamente')
+    if request.method == 'POST':
+        form = AddProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto agregado correctamente')
+            return redirect('productos')
+        else:
+            messages.error(request, 'Error al agregar producto')
     else:
-        messages.error(request, 'Error al agregar producto')
-    return redirect ('productos')
+        form = AddProductoForm()
 
 def edit_producto_view(request):
     if request.method == 'POST':
