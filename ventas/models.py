@@ -22,9 +22,9 @@ class Productos(models.Model):
     codigo = models.CharField(max_length=10, null = True, blank = True)
     descripcion = models.CharField(max_length=50, null = True, blank = True)
     imagen = models.ImageField(upload_to="productos", null = True, blank = True)
-    costo = models.IntegerField(max_length=30, default=0, null = True, blank = True)
-    precio = models.IntegerField(max_length=30, default=0, null = True, blank = True)
-    cantidad = models.IntegerField(max_length=30, null = True, blank = True)
+    costo = models.IntegerField(default=0, null = True, blank = True)
+    precio = models.IntegerField(default=0, null = True, blank = True)
+    cantidad = models.IntegerField(null = True, blank = True)
     Created = models.DateTimeField(auto_now_add=True)
     Updated = models.DateTimeField(auto_now=True)
 
