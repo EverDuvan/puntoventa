@@ -1,0 +1,8 @@
+django-humanize==0.1.2
+django-weasyprint==2.2.2
+django-widget-tweaks==1.5.0
+pillow==10.2.0
+psycopg2==2.9.9
+sqlparse==0.4.4
+tinycss2==1.2.1
+weasyprint==60.2
