@@ -67,12 +67,21 @@ def add_producto_view(request):
 
 def edit_producto_view(request):
     if request.method == 'POST':
-        producto = Productos.objects.get(pk=request.POST.get('id_personal_editar'))
-        form = EditarProductoForm(request.POST,request.FILES, instance=producto)
-        messages.success (request, 'Producto editado correctamente')
+        try:
+            producto = Productos.objects.get(pk=request.POST.get('id_personal_editar'))
+        except Productos.DoesNotExist:
+            messages.error(request, 'Producto no encontrado')
+            return redirect('productos')
+
+        form = EditarProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             form.save()
-    return redirect ('productos')
+            messages.success(request, 'Producto editado correctamente')
+        else:
+            messages.error(request, 'Hubo un error al editar el producto')
+
+    return redirect('productos')
+
 
 def delete_producto_view(request):
     if request.method == 'POST':

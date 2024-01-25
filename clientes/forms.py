@@ -63,5 +63,5 @@ class EditarProductoForm(forms.ModelForm):
             'costo': forms.TextInput(attrs={'id': 'costo_editar'}),
             'precio': forms.TextInput(attrs={'id': 'precio_editar'}),
             'cantidad': forms.TextInput(attrs={'id': 'cantidad_editar'}),
-            'imagen': forms.TextInput(attrs={'id': 'imagen_editar'}),
+            #imagen': forms.TextInput(attrs={'id': 'imagen_editar'}),
         }
