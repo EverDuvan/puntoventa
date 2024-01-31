@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'clientes',
     'ventas',
     'widget_tweaks',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
