@@ -8,11 +8,20 @@ from weasyprint.text.fonts import FontConfiguration
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
 from django.conf import settings
+import json
 import os
 
 
 # Create your views here.
 
+def ventas_view(request):
+    ventas = Egreso.objects.all()
+    num_ventas = len(ventas)
+    context = {
+        'ventas': ventas,
+        'num_ventas':num_ventas
+    }
+    return render(request, 'ventas.html', context)
 
 def clientes_view(request):
     clientes = Clientes.objects.all()
@@ -120,12 +129,55 @@ class add_ventas(ListView):
                     item = i.toJSON()
                     item['value'] = i.descripcion
                     data.append(item)
+            elif action == 'save':
+                total_pagado = float(request.POST['efectivo']) 
+                + float(request.POST['tarjeta']) 
+                + float(request.POST['transferencia']) 
+                + float(request.POST['vales']) 
+                + float(request.POST['otro'])
+                fecha = request.POST['fecha']
+                id_cliente = int(request.POST['id_cliente'])
+                cliente_obj = Clientes.objects.get(pk=int(id_cliente))
+                datos = json.loads(request.POST['verts'])
+                total_venta = float(datos['total'])
+                ticket_num = int(request.POST['ticket'])
+                if ticket_num == 1:
+                    ticket = True
+                else:
+                    ticket = False
+                desglosar_IVA_num = int(request.POST['desglosar'])
+                if desglosar_IVA_num == 0:
+                    desglosar_IVA = False
+                elif desglosar_IVA_num == 1:
+                    desglosar_IVA = True
+                comentarios = request.POST['comentarios']
+                nueva_venta = Egreso(fecha_pedido=fecha, 
+                                     cliente=cliente_obj, 
+                                     total=total_venta, 
+                                     pagado = total_pagado,
+                                     desglosar_IVA=desglosar_IVA,
+                                     comentarios=comentarios,
+                                     ticket=ticket,
+                                     desglosar=desglosar_IVA)
+                nueva_venta.save()
+                for i in datos['productos']:
+                    producto_obj = Productos.objects.get(pk=int(i['id']))
+                    nuevo_producto = ProductosEgreso(egreso=nueva_venta, 
+                                                     producto=producto_obj, 
+                                                     cantidad=int(i['cantidad']), 
+                                                     subtotal=float(i['subtotal']))
+                    nuevo_producto.save()
             else:
                 data['error'] = "Ha ocurrido un error"
         except Exception as e:
             data['error'] = str(e)
 
         return JsonResponse(data,safe=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productos_lista'] = Productos.objects.all()
+        context['clientes_lista'] = Clientes.objects.all()
+        return context
 
 
 def export_pdf_view(request, id, iva):
@@ -164,3 +216,10 @@ def export_pdf_view(request, id, iva):
     HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(target=response, font_config=font_config,stylesheets=[CSS(css_url)])
 
     return response
+
+def delete_venta_view(request):
+    if request.method == 'POST':
+        cliente = Egreso.objects.get(pk=request.POST.get('id_producto_eliminar'))
+        cliente.delete()
+        messages.success (request, 'Venta eliminada correctamente')
+    return redirect ('Venta')

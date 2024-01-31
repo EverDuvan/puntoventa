@@ -149,6 +149,7 @@
             <select required name="impresion" class="form-control border border-dark bg-secondary text-white"
                 id="impresion">
                 <option value="1" selected>Ticket</option>
+                <option value="2" selected>Nota de venta</option>
             </select>
         </div>
     </div>
@@ -373,6 +374,27 @@
 
     // Gudardar datos
     function saveData() {
+
+        if (document.getElementById("fecha").value == ""){
+            Swal.fire({
+                icon: 'error',
+                title: '',
+                text: "fecha no valida",
+            });
+            //alert('{{last_id}}');
+            return
+        };
+
+        if (document.getElementById("cliente").value == ""){
+            Swal.fire({
+                icon: 'error',
+                title: '',
+                text: "cliente no valido",
+            });
+            //alert('{{last_id}}');
+            return
+        };
+
         if (parseFloat(verts.items.total) == 0) {
             Swal.fire({
                 icon: 'error',
